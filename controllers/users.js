@@ -23,11 +23,7 @@ const getUserId = (req, res, next) => {
       }
       res.status(200).send({ data: user });
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new NotFoundErr({ message: 'Упс, пользователя с таким id не существует' });
-      } else next(err);
-    });
+    .catch(next);
 };
 
 // по запросу создаем пользователя

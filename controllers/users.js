@@ -59,7 +59,7 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
+      if (user === null) {
         throw new AuthorizationErr({ message: 'Не правильные логин или пароль' });
       }
       // здесь создаем токен

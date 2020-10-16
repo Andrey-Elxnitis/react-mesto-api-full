@@ -57,11 +57,12 @@ const login = (req, res, next) => {
     password,
   } = req.body;
 
-  return User.findUserByCredentials(email, password)
+  return User.findOne(email, password)
     .then((user) => {
-      if (user === null) {
+      if (!user) {
         throw new AuthorizationErr({ message: 'Не правильные логин или пароль' });
       }
+
       // здесь создаем токен
       const token = jwt.sign(
         { _id: user._id },

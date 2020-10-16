@@ -78,7 +78,7 @@ app.use(errors());
 
 // подключаем централизованную обработку ошибок
 app.use((err, req, res, next) => {
-  if (err.status !== '500') {
+  if (err.status) {
     res.status(err.status).send(err.message);
     return;
   }

@@ -23,7 +23,9 @@ const getUserId = (req, res, next) => {
       }
       res.status(200).send({ data: user });
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
 
 // по запросу создаем пользователя

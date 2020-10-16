@@ -17,11 +17,10 @@ const getUsers = (req, res, next) => {
 // по запросу возвращаем пользователя по id
 const getUserId = (req, res, next) => {
   User.findById(req.params.userId)
-    .orFail()
-    .catch(() => {
-      throw new NotFoundErr({ message: 'Упс, пользователя с таким id не существует' });
-    })
     .then((user) => {
+      if (user === null) {
+        throw new NotFoundErr({ message: 'Упс, пользователя с таким id не существует' });
+      }
       res.status(200).send({ data: user });
     })
     .catch(next);

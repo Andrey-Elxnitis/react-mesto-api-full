@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundErr = require('../errors/NotFoundErr');
 const BadRequestErr = require('../errors/BadRequestErr');
 const ConflickErr = require('../errors/ConflictErr');
+const AuthorizationErr = require('../errors/AuthorizationErr');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -58,6 +59,9 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      if (!user) {
+        throw new AuthorizationErr({ message: 'Не правильные логин или пароль' });
+      }
       // здесь создаем токен
       const token = jwt.sign(
         { _id: user._id },

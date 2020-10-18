@@ -20,5 +20,5 @@
 
 ## Домен для обращения к API
 
-http://api.elxnitis.students.nomoreparties.co
+https://api.elxnitis.students.nomoreparties.xyz
 

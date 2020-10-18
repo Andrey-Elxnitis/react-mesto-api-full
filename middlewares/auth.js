@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
-const NotFoundErr = require('../errors/NotFoundErr');
+const AuthorizationErr = require('../errors/AuthorizationErr');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
+// при успешной авторизации записываем токен
 module.exports = (req, res, next) => {
   const token = req.cookies.jwt;
   let payload;
@@ -13,7 +14,7 @@ module.exports = (req, res, next) => {
       `${NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret'}`,
     );
   } catch (err) {
-    throw new NotFoundErr({ message: 'Что-то не так с авторизацией' });
+    throw new AuthorizationErr({ message: 'Что-то не так с авторизацией' });
   }
 
   req.user = payload;

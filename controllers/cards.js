@@ -1,7 +1,7 @@
 const Card = require('../models/card');
 const BadRequestErr = require('../errors/BadRequestErr');
 const NotFoundErr = require('../errors/NotFoundErr');
-const ForbiddenError = require('../errors/ForbiddenError');
+const ForbiddenErr = require('../errors/ForbiddenErr');
 
 // по запросу возвращаем все карточки
 const getCards = (req, res, next) => {
@@ -31,7 +31,7 @@ const deleteCard = (req, res, next) => {
     })
     .then((card) => {
       if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError({ message: 'Удалять можно только свои карточки' });
+        throw new ForbiddenErr({ message: 'Удалять можно только свои карточки' });
       }
       Card.findByIdAndDelete(req.params.cardId)
         .then(() => res.status(200).send({ message: 'Карточка удалена' }))

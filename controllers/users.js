@@ -4,7 +4,6 @@ const User = require('../models/user');
 const NotFoundErr = require('../errors/NotFoundErr');
 const BadRequestErr = require('../errors/BadRequestErr');
 const ConflickErr = require('../errors/ConflictErr');
-const AuthorizationErr = require('../errors/AuthorizationErr');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -46,7 +45,7 @@ const createUser = (req, res, next) => {
         throw new ConflickErr({ message: 'Пользователь с таким email уже есть, введите другой email' });
       } else next(err);
     })
-    .then((user) => res.status(201).send(user))
+    .then((user) => res.status(201).send({ message: `Пользователь с ${user.email} зарегистрирован` }))
     .catch(next);
 };
 
@@ -57,12 +56,8 @@ const login = (req, res, next) => {
     password,
   } = req.body;
 
-  return User.findOne(email, password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        throw new AuthorizationErr({ message: 'Не правильные логин или пароль' });
-      }
-
       // здесь создаем токен
       const token = jwt.sign(
         { _id: user._id },

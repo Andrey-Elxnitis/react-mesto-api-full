@@ -82,6 +82,7 @@ app.use((err, req, res, next) => {
     res.status(err.status).send(err.message);
     return;
   }
+  console.log(err.name);
   res.status(500).send({ message: `К сожалению на сервере произошла ошибка: ${err.message}` });
   next();
 });

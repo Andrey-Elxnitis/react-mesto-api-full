@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const { validatorLink } = require('../middlewares/validate.js');
 
 const {
   getUsers,
@@ -29,8 +30,8 @@ router.patch('/users/me', celebrate({
 // при запросе обновляем аватар пользователя
 router.patch('/users/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().uri(),
-  }).unknown(true),
+    avatar: Joi.string().custom(validatorLink).required(),
+  }),
 }), updateUserAvatar);
 
 module.exports = router;

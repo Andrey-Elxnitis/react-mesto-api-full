@@ -21,7 +21,7 @@ const getUserId = (req, res, next) => {
       if (user === null) {
         throw new NotFoundErr({ message: 'Упс, пользователя с таким id не существует' });
       }
-      res.status(200).send({ data: user });
+      res.status(200).send(user);
     })
     .catch(next);
 };

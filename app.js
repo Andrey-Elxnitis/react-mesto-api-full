@@ -11,6 +11,7 @@ const error = require('./routes/error.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const { login, createUser } = require('./controllers/users.js');
 const auth = require('./middlewares/auth.js');
+const { validatorLink } = require('./middlewares/validate.js');
 
 const { PORT = 3000 } = process.env;
 
@@ -48,17 +49,17 @@ app.get('/crash-test', () => {
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(10),
+    password: Joi.string().required().min(10).pattern(/^\S+$/),
   }),
 }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(10),
+    password: Joi.string().required().min(10).pattern(/^\S+$/),
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().required().uri(),
+    avatar: Joi.string().required().custom(validatorLink),
   }).unknown(true),
 }), createUser);
 
@@ -79,7 +80,7 @@ app.use(errors());
 // подключаем централизованную обработку ошибок
 app.use((err, req, res, next) => {
   if (err.status) {
-    res.status(err.status).send(err.message);
+    res.status(err.status).send({ message: err.message });
     return;
   }
   console.log(err.name);

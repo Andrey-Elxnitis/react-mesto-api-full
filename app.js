@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
+// const cors = require('cors');
 const { celebrate, Joi, errors } = require('celebrate');
 const requestLimit = require('express-rate-limit');
 const usersRouters = require('./routes/users.js');
@@ -35,7 +35,7 @@ const limit = requestLimit({
 });
 
 // подключаем cors
-app.use(cors());
+// app.use(cors());
 
 // защищаемся от ddos атак
 app.use(limit);
@@ -80,7 +80,6 @@ app.use((err, req, res, next) => {
     res.status(err.status).send({ message: err.message });
     return;
   }
-  console.log(err.name);
   res.status(500).send({ message: `К сожалению на сервере произошла ошибка: ${err.message}` });
   next();
 });

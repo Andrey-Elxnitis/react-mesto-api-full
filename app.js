@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { celebrate, Joi, errors } = require('celebrate');
 const requestLimit = require('express-rate-limit');
 const usersRouters = require('./routes/users.js');
@@ -33,18 +34,14 @@ const limit = requestLimit({
   max: 100,
 });
 
+// подключаем cors
+app.use(cors());
+
 // защищаемся от ddos атак
 app.use(limit);
 
 // подключение логгера запросов
 app.use(requestLogger);
-
-// краш тест сервера
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Сервер сейчас упадёт');
-  }, 0);
-});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({

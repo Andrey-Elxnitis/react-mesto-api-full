@@ -4,6 +4,7 @@ const User = require('../models/user');
 const NotFoundErr = require('../errors/NotFoundErr');
 const BadRequestErr = require('../errors/BadRequestErr');
 const ConflickErr = require('../errors/ConflictErr');
+const { templateName, templateAbout, templateAvatar } = require('../data/dataUser');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 
@@ -34,9 +35,9 @@ const createUser = (req, res, next) => {
 
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name,
-      about,
-      avatar,
+      name: name || templateName,
+      about: about || templateAbout,
+      avatar: avatar || templateAvatar,
       email,
       password: hash,
     }))
@@ -45,7 +46,7 @@ const createUser = (req, res, next) => {
         throw new ConflickErr({ message: 'Пользователь с таким email уже есть, введите другой email' });
       } else next(err);
     })
-    .then((user) => res.status(201).send({ message: `Пользователь с ${user.email} зарегистрирован` }))
+    .then((user) => res.status(201).send({ message: `Пользователь с email: ${user.email} зарегистрирован` }))
     .catch(next);
 };
 

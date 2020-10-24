@@ -4,6 +4,7 @@ const { validatorLink } = require('../middlewares/validate.js');
 
 const {
   getUsers,
+  getUser,
   getUserId,
   changeUser,
   updateUserAvatar,
@@ -11,6 +12,13 @@ const {
 
 // при запросе показываем список пользователей
 router.get('/users', getUsers);
+
+// при запросе отдаем данные пользователя
+router.get('/users/me', celebrate({
+  headers: Joi.object().keys({
+    authorization: Joi.string().required(),
+  }).unknown(true),
+}), getUser);
 
 // при запросе показываем пользователя по id
 router.get('/users/:userId', celebrate({
